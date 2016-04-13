@@ -99,6 +99,11 @@ justify-content: center;
   margin: 3px;
   cursor: pointer;
 }
+#historyTable .nutrientCol{
+  display: flex;
+  flex-wrap:wrap;
+  justify-content: space-between;
+}
 
 @media (max-width: 768px){
   #foodTable{
