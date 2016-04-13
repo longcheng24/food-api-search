@@ -1,0 +1,110 @@
+body{
+  background: url("../images/bg-image.jpg") no-repeat;
+  background-size: 100% 100vh;
+  padding: 10px;
+}
+table{
+  border: 1px solid #fff;
+  background: rgba(0,0,0,0.2);
+}
+table td{
+
+}
+table th{
+  text-align: left;
+}
+#foodTable th:nth-of-type(1){
+  width: 40%;
+}
+#foodTable th:nth-of-type(2){
+  width: 50%;
+}
+#container{
+  margin-bottom: 10px;
+}
+.hidden{
+  display: none;
+}
+.nutrientCol div{
+  float: left;
+}
+#historyTable{
+  width: 100%;
+}
+#historyTable th:nth-of-type(1){
+  width: 15%
+}
+#historyTable th:nth-of-type(2){
+  width: 30%
+}
+#historyTable th:nth-of-type(3){
+  width: 10%
+}
+
+#historyTable .sbtn{
+  display: none;
+}
+#foodTable{
+  margin-top:10px;
+  width: 70%;
+}
+#foodTable .dbtn{
+  display: none;
+}
+.legend {
+        font-size: 12px;
+      }
+rect {
+      stroke-width: 2;
+}
+#chart{
+  position: relative;
+height: 70vh;
+width: 100%;
+align-items: center;
+justify-content: center;
+}
+.outerChat{
+  position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    min-height: 100vh;
+    background: rgba(255,255,255,0.9);
+    padding-top: 5%;
+    display: none;
+    z-index: 99;
+}
+.closeNu{
+  cursor: pointer;
+  border: 1px black solid;
+  padding: 10px;
+  margin-left: 30px;
+}
+.welcomeContainer{
+  margin-bottom: 30px
+}
+.welcomeContainer button{
+  margin-left: 30px;
+}
+#historyTable tr:nth-of-type(2n+2) .nutrientCol button{
+  border:0;
+  background:rgba(0,150,250,0.7);
+  margin: 3px;
+  cursor: pointer;
+}
+#historyTable tr:nth-of-type(2n+3) .nutrientCol button{
+  border:0;
+  background:rgba(0,250,150,0.7);
+  margin: 3px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px){
+  #foodTable{
+    width:100%
+  }
+  .hideInSmall{
+    display: none;
+  }
+}

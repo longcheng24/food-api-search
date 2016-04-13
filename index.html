@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Long Cheng Challenge</title>
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js?2.1.3"></script>
+    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.geom.js?2.1.3"></script>
+    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js?2.4.5"></script>
+    <link rel="stylesheet" href="style/style.css">
+    <script src="js/custom.js"></script>
+    <script src="js/food.js"></script>
+  </head>
+  <body>
+    <div class="welcomeContainer"></div>
+    <div>
+      <h2>Search Your Food</h2>
+      <span id="container"></span>
+
+    <table id="foodTable">
+      <tr><th  class="hideInSmall">Food Id</th><th>Food Name</th><th>Action</th><th class="hidden">Nutrients</th></tr>
+    </table>
+        </div>
+    <h2>Your Saved Food</h2>
+    <table id="historyTable">
+    </table>
+    <button onclick="clearAll()">Clear Histroy</button>
+    <div class="outerChat">
+      <span class="closeNu">X</span>
+      <div id="chart"></div>
+    </div>
+    <script type="text/babel">
+    var SearchBox = React.createClass({
+      getInitialState: function() {
+        return {
+          value: "" //set input box default value
+        };
+      },
+
+      handleChange: function(evt) {
+        this.setState({
+          value: evt.target.value //set updated value
+        });
+        this.getJsonData(evt);
+      },
+
+      getJsonData: function(evt) {
+        var apiUrl = "https://test.holmusk.com/food/search?q=" + evt.target.value; //get api url
+        this.drawTable(apiUrl);
+        this.autoComplete(apiUrl);
+      },
+
+      autoComplete: function(apiUrl){
+        $.getJSON(apiUrl,function(d){
+          var productNames = [];
+          for (var i = 0; i < 10; i++) {
+            if(d[i]){
+              productNames.push(d[i].name) //push json data to auto complete data array
+            }else{
+              productNames = [];
+            }
+          }
+          $("#search").autocomplete({
+            source: productNames
+          })
+        })
+      },
+
+      removePlaceHolder: function(evt){
+        $("#search").removeAttr('placeholder');
+      },
+
+      drawTable: function(apiUrl){
+        // using api json data to generate table dynamically
+        $.getJSON(apiUrl,function(d){
+          $("#foodTable").html('<tr><th  class="hideInSmall">Food Id</th><th>Food Name</th><th>Action</th><th class="hidden">Nutrients</th></tr>')
+          for (var i = 0; i < d.length; i++) {
+                var row = $("<tr />")
+                var nString = ""
+                $("#foodTable").append(row);
+                row.append($('<td class="hideInSmall">' + d[i]._id + "</td>"));
+                row.append($("<td>" + d[i].name + "</td>"));
+                row.append($("<td>" + '<button class="sbtn" onclick="saveAtLocal(this)">Save</button><button class="dbtn" onclick="Delete(this)">Delete</button>' + "</td>"));
+                for(var j = 0; j < d[i].portions.length; j++){
+                  var scale = d[i].portions[j].name;
+                  var dietary_fibre = d[i].portions[j].nutrients.important.dietary_fibre?d[i].portions[j].nutrients.important.dietary_fibre.value + d[i].portions[j].nutrients.important.dietary_fibre.unit:0;
+                  var saturated = d[i].portions[j].nutrients.important.saturated?d[i].portions[j].nutrients.important.saturated.value+d[i].portions[j].nutrients.important.saturated.unit:0;
+                  var total_carbs = d[i].portions[j].nutrients.important.total_carbs?d[i].portions[j].nutrients.important.total_carbs.value+d[i].portions[j].nutrients.important.total_carbs.unit:0;
+                  var sodium = d[i].portions[j].nutrients.important.sodium?d[i].portions[j].nutrients.important.sodium.value+d[i].portions[j].nutrients.important.sodium.unit:0;
+                  var potassium = d[i].portions[j].nutrients.important.potassium?d[i].portions[j].nutrients.important.potassium.value+d[i].portions[j].nutrients.important.potassium.unit:0;
+                  var polyunsaturated = d[i].portions[j].nutrients.important.polyunsaturated?d[i].portions[j].nutrients.important.polyunsaturated.value+d[i].portions[j].nutrients.important.polyunsaturated.unit:0;
+                  var calories = d[i].portions[j].nutrients.important.calories?d[i].portions[j].nutrients.important.calories.value+d[i].portions[j].nutrients.important.calories.unit:0;
+                  var sugar = d[i].portions[j].nutrients.important.sugar?d[i].portions[j].nutrients.important.sugar.value+d[i].portions[j].nutrients.important.sugar.unit:0;
+                  var total_fats = d[i].portions[j].nutrients.important.total_fats?d[i].portions[j].nutrients.important.total_fats.value+d[i].portions[j].nutrients.important.total_fats.unit:0;
+                  var monounsaturated = d[i].portions[j].nutrients.important.monounsaturated?d[i].portions[j].nutrients.important.monounsaturated.value+d[i].portions[j].nutrients.important.monounsaturated.unit:0;
+                  var cholesterol = d[i].portions[j].nutrients.important.cholesterol?d[i].portions[j].nutrients.important.cholesterol.value+d[i].portions[j].nutrients.important.cholesterol.unit:0;
+                  var protein = d[i].portions[j].nutrients.important.protein?d[i].portions[j].nutrients.important.protein.value+d[i].portions[j].nutrients.important.protein.unit:0;
+                  nString += '<div><button class="nbtn" onclick="d3PieChart(this)">'+ scale + '</button></div><div><p>dietary_fibre ' + dietary_fibre + '</p><p>saturated ' + saturated + '</p><p>total_carbs ' + total_carbs + '</p><p>sodium ' + sodium + '</p><p>potassium ' + potassium + '</p><p>polyunsaturated ' + polyunsaturated + '</p><p>calories ' + calories +
+'</p><p>sugar ' +  sugar +     '</p><p>total_fats ' +   total_fats + '</p><p>monounsaturated ' + monounsaturated + '</p><p>cholesterol ' + cholesterol + '</p><p>protein ' + protein + '</p></div>'
+              }
+                row.append($('<td class="hidden nutrientCol">' + nString + '</td>'));
+          }
+        });
+      },
+
+      render: function() {
+        // retrun input box
+        return (
+          <div>
+            <input placeholder="Search Food" value={this.state.value} onChange={this.handleChange} onFocus={this.removePlaceHolder} id="search"/><br />
+          </div>
+        );
+      }
+
+    });
+
+    ReactDOM.render(
+      <div><SearchBox /></div>,
+      document.getElementById('container')
+    );
+    </script>
+
+  </body>
+</html>
